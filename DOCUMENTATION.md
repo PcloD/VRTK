@@ -2654,6 +2654,7 @@ The script also has a public boolean pressed state for the buttons to allow the 
  * `ControllerEnabled` - Emitted when the controller is enabled.
  * `ControllerDisabled` - Emitted when the controller is disabled.
  * `ControllerIndexChanged` - Emitted when the controller index changed.
+ * `ControllerModelAvailable` - Emitted when the controller model becomes available.
  * `ControllerVisible` - Emitted when the controller is set to visible.
  * `ControllerHidden` - Emitted when the controller is set to hidden.
 
@@ -2695,6 +2696,17 @@ The SetControllerEvent/0 method is used to set the Controller Event payload.
    * `ControllerInteractionEventArgs` - The payload for a Controller Event.
 
 The SetControllerEvent/3 method is used to set the Controller Event payload.
+
+#### GetControllerType/0
+
+  > `public virtual SDK_BaseController.ControllerType GetControllerType()`
+
+  * Parameters
+   * _none_
+  * Returns
+   * `SDK_BaseController.ControllerType` - The type of controller that the controller events is attached to.
+
+The GetControllerType method is a shortcut to retrieve the current controller type the controller events is attached to.
 
 #### GetTouchpadAxis/0
 
@@ -3266,6 +3278,17 @@ The ForceStopTouching method will stop the controller from touching an object ev
    * `Collider[]` - An array of colliders that are associated with the controller.
 
 The ControllerColliders method retrieves all of the associated colliders on the controller.
+
+#### GetControllerType/0
+
+  > `public virtual SDK_BaseController.ControllerType GetControllerType()`
+
+  * Parameters
+   * _none_
+  * Returns
+   * `SDK_BaseController.ControllerType` - The type of controller that the interact touch is attached to.
+
+The GetControllerType method is a shortcut to retrieve the current controller type the interact touch is attached to.
 
 ### Example
 
@@ -6740,12 +6763,12 @@ The Device Finder offers a collection of static methods that can be called to fi
 
 ### Class Methods
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public static SDK_BaseController.ControllerType GetCurrentControllerType()`
+  > `public static SDK_BaseController.ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `SDK_BaseController.ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -7639,6 +7662,19 @@ The SDK Transform Modify can be used to change a transform orientation at runtim
  * **Target:** The target transform to modify on enable. If this is left blank then the transform the script is attached to will be used.
  * **Sdk Overrides:** A collection of SDK Transform overrides to change the given target transform for each specified SDK.
 
+### Class Methods
+
+#### UpdateTransform/1
+
+  > `public virtual void UpdateTransform(VRTK_ControllerReference controllerReference = null)`
+
+  * Parameters
+   * `VRTK_ControllerReference controllerReference` - An optional reference to the controller to update the transform with.
+  * Returns
+   * _none_
+
+The UpdateTransform method updates the Transform data on the current GameObject for the specified settings.
+
 ---
 
 ## Simulating Headset Movement (VRTK_Simulator)
@@ -8072,12 +8108,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public abstract ControllerType GetCurrentControllerType();`
+  > `public abstract ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null);`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -8693,12 +8729,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public override ControllerType GetCurrentControllerType()`
+  > `public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -9297,12 +9333,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public override ControllerType GetCurrentControllerType()`
+  > `public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -9920,12 +9956,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public override ControllerType GetCurrentControllerType()`
+  > `public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -10543,12 +10579,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public override ControllerType GetCurrentControllerType()`
+  > `public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -11165,12 +11201,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public override ControllerType GetCurrentControllerType()`
+  > `public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 
@@ -11776,12 +11812,12 @@ The ProcessUpdate method enables an SDK to run logic for every Unity Update
 
 The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
 
-#### GetCurrentControllerType/0
+#### GetCurrentControllerType/1
 
-  > `public override ControllerType GetCurrentControllerType()`
+  > `public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)`
 
   * Parameters
-   * _none_
+   * `VRTK_ControllerReference controllerReference` - The reference to the controller to get type of.
   * Returns
    * `ControllerType` - The ControllerType based on the SDK and headset being used.
 

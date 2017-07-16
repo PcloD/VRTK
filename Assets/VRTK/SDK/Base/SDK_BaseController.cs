@@ -4,6 +4,13 @@ namespace VRTK
     using UnityEngine;
     using System.Collections.Generic;
 
+    public struct VRTKSDKBaseControllerEventArgs
+    {
+        public VRTK_ControllerReference controllerReference;
+    }
+
+    public delegate void VRTKSDKBaseControllerEventHandler(object sender, VRTKSDKBaseControllerEventArgs e);
+
     /// <summary>
     /// The Base Controller SDK script provides a bridge to SDK methods that deal with the input devices.
     /// </summary>
@@ -133,6 +140,12 @@ namespace VRTK
             Oculus_GearVRController
         }
 
+        public event VRTKSDKBaseControllerEventHandler LeftControllerModelReady;
+        public event VRTKSDKBaseControllerEventHandler RightControllerModelReady;
+
+        protected Transform defaultSDKLeftControllerModel = null;
+        protected Transform defaultSDKRightControllerModel = null;
+
         /// <summary>
         /// The ProcessUpdate method enables an SDK to run logic for every Unity Update
         /// </summary>
@@ -150,8 +163,9 @@ namespace VRTK
         /// <summary>
         /// The GetCurrentControllerType method returns the current used ControllerType based on the SDK and headset being used.
         /// </summary>
+        /// <param name="controllerReference">The reference to the controller to get type of.</param>
         /// <returns>The ControllerType based on the SDK and headset being used.</returns>
-        public abstract ControllerType GetCurrentControllerType();
+        public abstract ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null);
 
         /// <summary>
         /// The GetControllerDefaultColliderPath returns the path to the prefab that contains the collider objects for the default controller of this SDK.
@@ -368,6 +382,22 @@ namespace VRTK
         /// <returns>Returns true if the given button is in the state of the given press type on the given controller reference.</returns>
         public abstract bool GetControllerButtonState(ButtonTypes buttonType, ButtonPressTypes pressType, VRTK_ControllerReference controllerReference);
 
+        protected virtual void Awake()
+        {
+            BothControllersAutoReady();
+        }
+
+        protected virtual void BothControllersAutoReady()
+        {
+            BothControllersReady();
+        }
+
+        protected virtual void BothControllersReady()
+        {
+            OnControllerModelReady(ControllerHand.Left, null);
+            OnControllerModelReady(ControllerHand.Right, null);
+        }
+
         protected virtual GameObject GetSDKManagerControllerLeftHand(bool actual = false)
         {
             VRTK_SDKManager sdkManager = VRTK_SDKManager.instance;
@@ -455,6 +485,28 @@ namespace VRTK
                 }
             }
             return returnController;
+        }
+
+        protected virtual void OnControllerModelReady(ControllerHand hand, VRTK_ControllerReference controllerReference)
+        {
+            VRTKSDKBaseControllerEventArgs e;
+            e.controllerReference = controllerReference;
+
+            switch (hand)
+            {
+                case ControllerHand.Left:
+                    if (LeftControllerModelReady != null)
+                    {
+                        LeftControllerModelReady(this, e);
+                    }
+                    break;
+                case ControllerHand.Right:
+                    if (RightControllerModelReady != null)
+                    {
+                        RightControllerModelReady(this, e);
+                    }
+                    break;
+            }
         }
     }
 

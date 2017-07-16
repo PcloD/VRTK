@@ -89,8 +89,9 @@ namespace VRTK
         /// <summary>
         /// The GetCurrentControllerType method returns the current used ControllerType based on the SDK and headset being used.
         /// </summary>
+        /// <param name="controllerReference">The reference to the controller to get type of.</param>
         /// <returns>The ControllerType based on the SDK and headset being used.</returns>
-        public override ControllerType GetCurrentControllerType()
+        public override ControllerType GetCurrentControllerType(VRTK_ControllerReference controllerReference = null)
         {
             switch (OVRInput.GetActiveController())
             {
@@ -637,6 +638,50 @@ namespace VRTK
                     return IsButtonPressed(index, pressType, OVRInput.Button.Start);
             }
             return false;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            GameObject avatarObject = GetAvatar();
+            if (avatarObject != null)
+            {
+                defaultSDKLeftControllerModel = avatarObject.transform.Find("controller_left");
+                defaultSDKRightControllerModel = avatarObject.transform.Find("controller_right");
+            }
+            RegisterAvatarEvents();
+        }
+
+        protected virtual void RegisterAvatarEvents()
+        {
+            if (HasAvatar())
+            {
+                GetBoundariesSDK();
+#if VRTK_DEFINE_SDK_OCULUS_AVATAR
+                if (cachedBoundariesSDK != null)
+                {
+                    OvrAvatar avatar = cachedBoundariesSDK.GetAvatar();
+                    bool isDefaultModel = (defaultSDKLeftControllerModel != null && defaultSDKRightControllerModel != null && GetControllerModel(ControllerHand.Left) == defaultSDKLeftControllerModel.gameObject && GetControllerModel(ControllerHand.Right) == defaultSDKRightControllerModel.gameObject);
+                    if (avatar != null && isDefaultModel)
+                    {
+                        avatar.AssetsDoneLoading.AddListener(BothControllersReady);
+                    }
+                    else
+                    {
+                        BothControllersReady();
+                    }
+                }
+#endif
+            }
+            else
+            {
+                BothControllersReady();
+            }
+        }
+
+        protected override void BothControllersAutoReady()
+        {
         }
 
         protected virtual void CalculateAngularVelocity(VRTK_ControllerReference controllerReference)

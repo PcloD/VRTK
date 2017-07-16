@@ -17,8 +17,18 @@
         public event VRTKTrackedControllerEventHandler ControllerEnabled;
         public event VRTKTrackedControllerEventHandler ControllerDisabled;
         public event VRTKTrackedControllerEventHandler ControllerIndexChanged;
+        public event VRTKTrackedControllerEventHandler ControllerModelAvailable;
 
         protected GameObject aliasController;
+        protected SDK_BaseController.ControllerType controllerType = SDK_BaseController.ControllerType.Undefined;
+
+        protected VRTK_ControllerReference controllerReference
+        {
+            get
+            {
+                return VRTK_ControllerReference.GetControllerReference(index);
+            }
+        }
 
         public virtual void OnControllerEnabled(VRTKTrackedControllerEventArgs e)
         {
@@ -44,6 +54,19 @@
             }
         }
 
+        public virtual void OnControllerModelAvailable(VRTKTrackedControllerEventArgs e)
+        {
+            if (ControllerModelAvailable != null)
+            {
+                ControllerModelAvailable(this, e);
+            }
+        }
+
+        public virtual SDK_BaseController.ControllerType GetControllerType()
+        {
+            return controllerType;
+        }
+
         protected virtual VRTKTrackedControllerEventArgs SetEventPayload(uint previousIndex = uint.MaxValue)
         {
             VRTKTrackedControllerEventArgs e;
@@ -66,11 +89,15 @@
             }
 
             index = VRTK_DeviceFinder.GetControllerIndex(gameObject);
+            VRTK_SDK_Bridge.GetControllerSDK().LeftControllerModelReady += ControllerModelReady;
+            VRTK_SDK_Bridge.GetControllerSDK().RightControllerModelReady += ControllerModelReady;
             OnControllerEnabled(SetEventPayload());
         }
 
         protected virtual void OnDisable()
         {
+            VRTK_SDK_Bridge.GetControllerSDK().LeftControllerModelReady -= ControllerModelReady;
+            VRTK_SDK_Bridge.GetControllerSDK().RightControllerModelReady -= ControllerModelReady;
             OnControllerDisabled(SetEventPayload());
         }
 
@@ -92,6 +119,7 @@
                 uint previousIndex = index;
                 index = checkIndex;
                 OnControllerIndexChanged(SetEventPayload(previousIndex));
+                controllerType = (controllerReference != null ? VRTK_DeviceFinder.GetCurrentControllerType(controllerReference) : SDK_BaseController.ControllerType.Undefined);
             }
 
             VRTK_SDK_Bridge.ControllerProcessUpdate(VRTK_ControllerReference.GetControllerReference(index));
@@ -99,6 +127,18 @@
             if (aliasController != null && gameObject.activeInHierarchy && !aliasController.activeSelf)
             {
                 aliasController.SetActive(true);
+            }
+        }
+
+        protected virtual void ControllerModelReady(object sender, VRTKSDKBaseControllerEventArgs e)
+        {
+            controllerType = (controllerReference != null ? VRTK_DeviceFinder.GetCurrentControllerType(controllerReference) : SDK_BaseController.ControllerType.Undefined);
+            if (e.controllerReference == null || controllerReference == e.controllerReference)
+            {
+                if (controllerType != SDK_BaseController.ControllerType.Undefined)
+                {
+                    OnControllerModelAvailable(SetEventPayload());
+                }
             }
         }
     }
