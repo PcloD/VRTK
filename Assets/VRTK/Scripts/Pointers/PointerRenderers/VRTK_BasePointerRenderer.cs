@@ -611,7 +611,8 @@ namespace VRTK
         protected virtual void UpdateDirectionIndicator()
         {
             RaycastHit destinationHit = GetDestinationHit();
-            directionIndicator.SetPosition((controllingPointer.IsPointerActive() && destinationHit.collider != null), destinationHit.point);
+            bool showIndicator = (directionIndicator.alwaysShowWithCursor ? (IsCursorVisible() || controllingPointer.IsPointerActive()) : controllingPointer.IsPointerActive());
+            directionIndicator.SetPosition((showIndicator && destinationHit.collider != null), destinationHit.point);
         }
     }
 }

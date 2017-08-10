@@ -774,6 +774,7 @@ This can be useful for rotating the play area upon teleporting to face the user 
  * **Include Headset Offset:** If this is checked then the reported rotation will include the offset of the headset rotation in relation to the play area.
  * **Display On Invalid Location:** If this is checked then the direction indicator will be displayed when the location is invalid.
  * **Use Pointer Color:** If this is checked then the pointer valid/invalid colours will also be used to change the colour of the direction indicator.
+ * **Always Show With Cursor:** If this is checked and the pointer renderer cursor is visible (even if the pointer is not activated) then the pointer direction indicator will be visible. If the pointer is activted but the cursor is hidden then the pointer direction indicator will still be visible.
 
 ### Class Events
 

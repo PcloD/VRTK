@@ -27,6 +27,8 @@ namespace VRTK
         public bool displayOnInvalidLocation = true;
         [Tooltip("If this is checked then the pointer valid/invalid colours will also be used to change the colour of the direction indicator.")]
         public bool usePointerColor = false;
+        [Tooltip("If this is checked and the pointer renderer cursor is visible (even if the pointer is not activated) then the pointer direction indicator will be visible. If the pointer is activted but the cursor is hidden then the pointer direction indicator will still be visible.")]
+        public bool alwaysShowWithCursor = false;
 
         [HideInInspector]
         public bool isActive = true;
